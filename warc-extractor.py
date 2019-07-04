@@ -264,7 +264,8 @@ class ContentType(CaseInsensitiveDict):
             data["type"] = _list[0]
             for i in _list[1:]:
                 test = [n.strip() for n in re.split(SEP, i)]
-                data[test[0]] = test[1]
+                if (len(test) > 1):
+                    data[test[0]] = test[1]
 
         super().__init__(data)
 
