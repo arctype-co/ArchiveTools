@@ -691,6 +691,9 @@ def checkFilter(filters, record):
             return False
     return True
 
+def normalize_path(path_str):
+    return path_str.encode('latin-1', errors='replace').decode('latin-1')
+
 def parse(args):
     #Clear output warc file.
     if args.dump == "warc":
@@ -738,7 +741,8 @@ def parse(args):
                 #Final fixes.
                 path = path.replace(".", "-")
                 host = url.hostname.replace('www.', '', 1)
-                path = args.output_path + host + path
+		# Re-encode to latin-1 for filesystem paths
+                path = normalize_path(args.output_path + host + path)
 
                 #Create new directories
                 if not os.path.exists(path):
@@ -774,7 +778,7 @@ def parse(args):
                 while os.path.isfile(temp):
                     n +=1
                     temp = path[:index] + "("+ str(n) + ")" + path[index:]
-                path = temp
+                path = normalize_path(temp)
 
                 #Write file.
                 with open(path, 'wb') as fp:
